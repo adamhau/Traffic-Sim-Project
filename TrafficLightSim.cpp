@@ -12,6 +12,7 @@ int loopVal = 0;
 // Update variables to stagger cars
 int xPos = 350, yPos = 650;
 
+// Sets Traffic light to Green
 void greenLight(Circle &light, int x)
 {
     light.setColor(COLOR("Green"));
@@ -21,6 +22,7 @@ void greenLight(Circle &light, int x)
         light.moveTo(900, 760);
 }
 
+//Sets traffic light to Red
 void redLight(Circle &light, int x)
 {
     light.setColor(COLOR("Red"));
@@ -30,6 +32,7 @@ void redLight(Circle &light, int x)
         light.moveTo(900, 640);
 }
 
+//sets traffic light to Yellow
 void yellowLight(Circle &light, int x)
 {
     light.setColor(COLOR("Yellow"));
@@ -41,7 +44,10 @@ void yellowLight(Circle &light, int x)
 
 main_program
 {
+    //boolean value for calling yellow light
     bool called = false;
+
+    //Create window
     initCanvas("Traffic Light Sim", 1000, 1000);
 
     struct Car
@@ -49,6 +55,7 @@ main_program
         Rectangle body;
     };
 
+    //creates the intersection
     Rectangle ewRoad(500, 500, 1000, 200);
     ewRoad.setColor(COLOR("#8c8c8c"));
     ewRoad.setFill();
@@ -97,6 +104,7 @@ main_program
 
     Text t2(900, 820, "E/W Traffic Light");
 
+    //initialize and stagger NS cars
     for (int i = 0; i < 3; i++)
     {
         carArrayNS[i].body = Rectangle(500, yPos, 50, 75);
@@ -116,12 +124,14 @@ main_program
         xPos -= 150;
     }
 
+   //main loop that asks user for input and simulates the intersection
     while (flag)
     {
         xPos = 350;
         yPos = 650;
-        called = false;
+        called = false; //reset yellow light flag
 
+        //reset NS car locations to starting position
         for (int i = 0; i < 3; i++)
         {
             carArrayNS[i].body.moveTo(500, yPos);
@@ -129,6 +139,7 @@ main_program
             yPos += 150;
         }
 
+        //reset EW car locations to starting position
         for (int i = 0; i < 3; i++)
         {
             carArrayEW[i].body.moveTo(xPos, 500);
@@ -142,17 +153,22 @@ main_program
 
         switch (input)
         {
+        //heavy traffic
         case 'h':
+            //show all vehicles
             carArrayNS[0].body.show();
             carArrayNS[1].body.show();
             carArrayNS[2].body.show();
             carArrayEW[0].body.show();
             carArrayEW[1].body.show();
             carArrayEW[2].body.show();
+
+            //set light to green
             wait(1);
             greenLight(c1, 0);
             wait(0.5);
 
+            //moves NS Cars, when last car gets across road, change light to yellow.
             while (carArrayNS[2].body.getY() >= -35)
             {
                 carArrayNS[0].body.move(0, -15);
@@ -165,12 +181,14 @@ main_program
                 }
                 wait(0.1);
             }
+            //when final car leaves screen, light turns red
             redLight(c1, 0);
             wait(1);
             greenLight(c2, 1);
             called = false;
             wait(0.5);
 
+            //moves EW Cars, when last car gets across road, change light to yellow.
             while (carArrayEW[2].body.getX() <= 1035)
             {
                 carArrayEW[0].body.move(15, 0);
@@ -186,7 +204,8 @@ main_program
             redLight(c2, 1);
             wait(1);
             break;
-
+           
+        //medium traffic, same functionality as heavy with one less car
         case 'm':
             carArrayNS[0].body.show();
             carArrayNS[1].body.show();
@@ -227,7 +246,8 @@ main_program
             redLight(c2, 1);
             wait(1);
             break;
-
+           
+        //light traffic, same functionality as medium with one less car
         case 'l':
             carArrayNS[0].body.show();
             carArrayEW[0].body.show();
